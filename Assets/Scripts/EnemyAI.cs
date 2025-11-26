@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
@@ -12,10 +13,13 @@ public class Enemy : MonoBehaviour
 
     public float health = 100f;
 
+    private NavMeshAgent agent;
+
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        agent = GetComponent<NavMeshAgent>();
     }
 
     // Update is called once per frame
@@ -24,11 +28,11 @@ public class Enemy : MonoBehaviour
         if(player == null){
             return;
         }
+
+        ChasePlayer();
+
         if (Vector3.Distance(transform.position, player.transform.position) <= attackRange){
             Attack();
-        }
-        else {
-            ChasePlayer();
         }
     }
 
@@ -50,11 +54,10 @@ public class Enemy : MonoBehaviour
     }
 
     public void ChasePlayer(){
-        transform.LookAt(player.transform);
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        agent.SetDestination(player.transform.position);
     }
 
     public void Attack(){
-        // attack the player
+        // attack
     }
 }

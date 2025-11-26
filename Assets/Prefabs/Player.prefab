@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1033044337637864450}
   - component: {fileID: 7678325025793994242}
   - component: {fileID: 5655123215985846131}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -104,7 +104,11 @@ GameObject:
   - component: {fileID: 4139535187785487497}
   - component: {fileID: 1092802559085591267}
   - component: {fileID: 1917092298560775631}
-  m_Layer: 0
+  - component: {fileID: 768531885944345643}
+  - component: {fileID: 3238796034344237221}
+  - component: {fileID: 1082925351316551769}
+  - component: {fileID: 3145814679913489672}
+  m_Layer: 6
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -203,3 +207,63 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &768531885944345643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7282736328781787428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b0522c7a9f8e40c1bb6eea5b47dc388, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3238796034344237221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7282736328781787428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e008831e672484e7bbeaaed038fb121c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  gravity: -9.81
+  jumpHeight: 1.5
+--- !u!114 &1082925351316551769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7282736328781787428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c828fde995be43bc9d063208602bfb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerCamera: {fileID: 7678325025793994242}
+  xSensitivity: 100
+  ySensitivity: 100
+--- !u!114 &3145814679913489672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7282736328781787428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45938b4a99d6a49f5ab719edb37df281, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPrefab: {fileID: 5203499878853301564, guid: 2bd4c45afdf7d419a9160da5ef113225, type: 3}
+  clips: 3
+  bulletsPerClip: 10
+  bullets: 0
+  reloadTime: 1
+  damage: 10

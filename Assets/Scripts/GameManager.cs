@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
     * @return bool True if the game is over, false otherwise
     */
     public bool IsGameOver(){
-        return true;
+        return false;
     }
 
     /**
