@@ -14,12 +14,16 @@ public class WeaponManager : MonoBehaviour
     public int bullets = 0;
     public float reloadTime = 1f;
     public float damage = 10f;
+    public float fireRate = 0.1f;
+    private float lastShotTime = 0f;
 
     public GameObject currentMagazine;
     public GameObject magazinePrefab;
     public Transform magHolder;
     private Queue<GameObject> droppedMags = new Queue<GameObject>();
     private CharacterController playerController;
+
+    private bool isReloading = false;
 
     // Start is called before the first frame update
     void Start()
@@ -37,6 +41,11 @@ public class WeaponManager : MonoBehaviour
 
 
     public void Shoot(){
+        if (isReloading) return; // Can't shoot while reloading
+        if (Time.time < lastShotTime + fireRate) return; // Cooldown
+
+        lastShotTime = Time.time;
+
         if(bullets > 0){
             bullets--;
             UpdateAmmoUI();
@@ -56,11 +65,8 @@ public class WeaponManager : MonoBehaviour
     }
 
     public void Reload(){
-        if(bullets == bulletsPerClip){
-            return;
-        }
-
-        if(clips == 0){
+        if (isReloading || bullets == bulletsPerClip || clips == 0)
+        {
             return;
         }
 
@@ -68,6 +74,7 @@ public class WeaponManager : MonoBehaviour
     }
 
     public IEnumerator ReloadCoroutine() {
+        isReloading = true;
         Debug.Log("Reloading");
 
         // 1. Drop current magazine
@@ -93,6 +100,9 @@ public class WeaponManager : MonoBehaviour
             {
                 Physics.IgnoreCollision(col, playerController);
             }
+
+            // Add some torque to make it tumble and land flat
+            rb.AddTorque(Random.insideUnitSphere * 5f, ForceMode.Impulse);
 
             // Manage queue
             droppedMags.Enqueue(currentMagazine);
@@ -146,6 +156,7 @@ public class WeaponManager : MonoBehaviour
         bullets = bulletsPerClip;
         clips--;
         UpdateAmmoUI();
+        isReloading = false;
     }
 
     void UpdateAmmoUI()
@@ -153,7 +164,18 @@ public class WeaponManager : MonoBehaviour
         if (ammoText != null)
         {
             ammoText.text = $"Ammo: {bullets} / {bulletsPerClip} Clips: {clips}";
+            Debug.Log($"Updated UI: {ammoText.text}");
         }
+        else
+        {
+            Debug.LogError("Ammo Text is NULL in WeaponManager!");
+        }
+    }
+
+    public void AddAmmo(int amount)
+    {
+        clips += amount;
+        UpdateAmmoUI();
     }
 
 }
