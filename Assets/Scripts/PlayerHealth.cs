@@ -7,20 +7,56 @@ public class PlayerHealth : MonoBehaviour
     public float maxHealth = 100f;
     public float currentHealth;
 
+    public TMPro.TextMeshProUGUI healthText;
+
     // Start is called before the first frame update
     void Start()
     {
         currentHealth = maxHealth;
+        UpdateHealthUI();
     }
 
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
         Debug.Log($"Player took {damage} damage. Current Health: {currentHealth}");
+        UpdateHealthUI();
 
         if (currentHealth <= 0)
         {
             Die();
+        }
+    }
+
+    void UpdateHealthUI()
+    {
+        if (healthText != null)
+        {
+            healthText.text = $"HP: {Mathf.Ceil(currentHealth)}";
+            
+            // Change color based on health percentage
+            float percentage = currentHealth / maxHealth;
+
+            if (percentage > 0.75f)
+            {
+                healthText.color = Color.green;
+            }
+            else if (percentage > 0.5f)
+            {
+                healthText.color = Color.yellow;
+            }
+            else if (percentage > 0.25f)
+            {
+                healthText.color = new Color(1f, 0.64f, 0f); // Orange
+            }
+            else
+            {
+                healthText.color = Color.red;
+            }
+        }
+        else
+        {
+            Debug.LogError($"Health Text is NULL on {gameObject.name}!");
         }
     }
 

@@ -53,7 +53,20 @@ public class WeaponManager : MonoBehaviour
             // Use firePoint if available, otherwise fallback to transform
             Transform spawnPoint = firePoint != null ? firePoint : transform;
             GameObject bullet = Instantiate(bulletPrefab, spawnPoint.position, spawnPoint.rotation);
-            bullet.GetComponent<Bullet>().damage = damage;
+            Bullet b = bullet.GetComponent<Bullet>();
+            if (b != null)
+            {
+                b.damage = damage;
+                // Assign owner (Player)
+                if (playerController != null)
+                {
+                    b.owner = playerController.gameObject;
+                }
+                else
+                {
+                    b.owner = gameObject; // Fallback to gun object
+                }
+            }
             
             // Ignore collision between bullet and player
             if (playerController != null)
@@ -168,7 +181,8 @@ public class WeaponManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"Ammo Text is NULL in WeaponManager on object: {gameObject.name}!");
+            // Optional: Do nothing if no UI is assigned (e.g., for enemies)
+            // Debug.LogError($"Ammo Text is NULL in WeaponManager on object: {gameObject.name}!");
         }
     }
 
