@@ -51,7 +51,22 @@ public class EnemyShooter : MonoBehaviour
     {
         if (bulletPrefab != null && firePoint != null)
         {
-            Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+            GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+            
+            // Assign owner to prevent self-damage
+            Bullet b = bullet.GetComponent<Bullet>();
+            if (b != null)
+            {
+                b.owner = gameObject;
+            }
+
+            // Ignore collision with self (Physics layer backup)
+            Collider enemyCollider = GetComponent<Collider>();
+            Collider bulletCollider = bullet.GetComponent<Collider>();
+            if (enemyCollider != null && bulletCollider != null)
+            {
+                Physics.IgnoreCollision(enemyCollider, bulletCollider);
+            }
         }
     }
 }
