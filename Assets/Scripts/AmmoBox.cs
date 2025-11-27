@@ -2,30 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AmmoBox : MonoBehaviour
+public class AmmoBox : Interactable
 {
     public int ammoAmount = 1;
 
-    private void OnTriggerEnter(Collider other)
+    void Start()
     {
-        // Try to find WeaponManager on the object that hit us (or its children/parent)
-        WeaponManager weaponManager = other.GetComponent<WeaponManager>();
-        if (weaponManager == null)
+        if (string.IsNullOrEmpty(promptMessage))
         {
-            weaponManager = other.GetComponentInChildren<WeaponManager>();
+            promptMessage = "Press E to pick up Ammo";
         }
-        
-        // If not found, maybe it's on the parent (like Player object)
-        if (weaponManager == null)
-        {
-            weaponManager = other.GetComponentInParent<WeaponManager>();
-        }
+    }
 
-        if (weaponManager != null)
+    protected override void Interact()
+    {
+        // Find the player
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
         {
-            weaponManager.AddAmmo(ammoAmount);
-            Debug.Log("Picked up ammo!");
-            Destroy(gameObject);
+            // Try to find WeaponManager on the player or its children (the gun)
+            WeaponManager weaponManager = player.GetComponentInChildren<WeaponManager>();
+            
+            if (weaponManager != null)
+            {
+                weaponManager.AddAmmo(ammoAmount);
+                Debug.Log("Picked up ammo!");
+                Destroy(gameObject);
+            }
         }
     }
 }

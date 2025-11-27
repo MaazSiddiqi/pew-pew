@@ -9,6 +9,7 @@ public class InputManager : MonoBehaviour
     private PlayerInput.OnFootActions onFoot;
     private PlayerLook playerLook;
     private PlayerMotor motor;
+    private PlayerInteract playerInteract;
     [SerializeField] private WeaponManager weaponManager;
 
     void Awake(){
@@ -16,6 +17,7 @@ public class InputManager : MonoBehaviour
         onFoot = playerInput.OnFoot;
         playerLook = GetComponent<PlayerLook>();
         motor = GetComponent<PlayerMotor>();
+        playerInteract = GetComponent<PlayerInteract>();
         if (weaponManager == null) weaponManager = GetComponentInChildren<WeaponManager>();
 
         onFoot.Jump.performed += ctx => motor.Jump(); //call back context jump function state
@@ -25,6 +27,12 @@ public class InputManager : MonoBehaviour
         {
             onFoot.Shoot.performed += ctx => weaponManager.Shoot();
             onFoot.Reload.performed += ctx => weaponManager.Reload();
+        }
+
+        // Hook up interaction
+        if (playerInteract != null)
+        {
+            onFoot.Interact.performed += ctx => playerInteract.Interact();
         }
     }
     // Start is called before the first frame update
