@@ -45,22 +45,6 @@ public class PlayerInteract : MonoBehaviour
                 playerUI.UpdateText(interactable.promptMessage);
                 Debug.Log($"Looking at Interactable: {interactable.name}");
             }
-            else
-            {
-                 Debug.Log($"Hit object on Interactable layer but no script: {hitInfo.collider.name}");
-            }
-        }
-        else
-        {
-            // If we hit something with the debug ray but NOT the mask ray, we might have a layer issue
-            if (Physics.Raycast(ray, out debugHit, distance))
-            {
-                 Debug.Log($"Ray blocked by: {debugHit.collider.name} (Layer: {LayerMask.LayerToName(debugHit.collider.gameObject.layer)}). Check your Layer Mask!");
-            }
-            else
-            {
-                // Debug.Log("Raycast missed everything within range.");
-            }
         }
     }
 
