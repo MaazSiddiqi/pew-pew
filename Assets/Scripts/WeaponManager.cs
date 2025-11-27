@@ -168,7 +168,7 @@ public class WeaponManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Ammo Text is NULL in WeaponManager!");
+            Debug.LogError($"Ammo Text is NULL in WeaponManager on object: {gameObject.name}!");
         }
     }
 
