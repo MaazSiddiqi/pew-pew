@@ -7,6 +7,9 @@ public class WeaponManager : MonoBehaviour
     public GameObject bulletPrefab;
     public Transform firePoint;
     public TMPro.TextMeshProUGUI ammoText;
+    public AudioClip shootSound;
+    public AudioClip reloadSound;
+    private AudioSource audioSource;
 
     public int clips = 3;
     public int bulletsPerClip = 10;
@@ -31,6 +34,7 @@ public class WeaponManager : MonoBehaviour
         bullets = bulletsPerClip;
         UpdateAmmoUI();
         playerController = GetComponentInParent<CharacterController>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -49,6 +53,10 @@ public class WeaponManager : MonoBehaviour
         if(bullets > 0){
             bullets--;
             UpdateAmmoUI();
+            if (audioSource != null && shootSound != null)
+            {
+                audioSource.PlayOneShot(shootSound);
+            }
             Debug.Log("Shooting");
             // Use firePoint if available, otherwise fallback to transform
             Transform spawnPoint = firePoint != null ? firePoint : transform;
@@ -89,6 +97,11 @@ public class WeaponManager : MonoBehaviour
     public IEnumerator ReloadCoroutine() {
         isReloading = true;
         Debug.Log("Reloading");
+
+        if (audioSource != null && reloadSound != null)
+        {
+            audioSource.PlayOneShot(reloadSound);
+        }
 
         // 1. Drop current magazine
         if (currentMagazine != null)
