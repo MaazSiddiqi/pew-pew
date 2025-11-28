@@ -11,6 +11,10 @@
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 
+# Plastic SCM / Unity Version Control
+/[Aa]ssets/[Pp]lugins/[Pp]lasticSCM/
+.plastic/
+
 # MemoryCaptures can get excessive
 /[Mm]emoryCaptures/
 
