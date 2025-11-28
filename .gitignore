@@ -11,7 +11,8 @@
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 
-# get rid of the plastic
+# Plastic SCM / Unity Version Control
+/[Aa]ssets/[Pp]lugins/[Pp]lasticSCM/
 .plastic/
 
 # MemoryCaptures can get excessive

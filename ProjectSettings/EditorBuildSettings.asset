@@ -5,7 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Super Casual Shooter Assets/Scenes/Demo Scene (Game).unity
     guid: ffb554a9f53a4e04d894c8a8ff63189f
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: b4efadf7e942145e7a5819aa5f5d7b48
+  - enabled: 1
+    path: Assets/Scenes/Game.unity
+    guid: bd41033556ce24ae3a0a9d42b91638a1
   m_configObjects: {}
