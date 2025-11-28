@@ -127,8 +127,11 @@ public class WeaponManager : MonoBehaviour
                 Physics.IgnoreCollision(col, playerController);
             }
 
-            // Add some torque to make it tumble and land flat
-            rb.AddTorque(Random.insideUnitSphere * 5f, ForceMode.Impulse);
+            // Add specific torque to make it tip over and land flat
+            // Apply torque around local X and Z axes to tip it over (avoid Y to prevent spinning like a top)
+            Vector3 torque = (currentMagazine.transform.right * Random.Range(5f, 10f)) + 
+                             (currentMagazine.transform.forward * Random.Range(5f, 10f));
+            rb.AddTorque(torque, ForceMode.Impulse);
 
             // Manage queue
             droppedMags.Enqueue(currentMagazine);

@@ -583,7 +583,7 @@ PrefabInstance:
       objectReference: {fileID: 41932546}
     - target: {fileID: 3544809056879113241, guid: b2d177d77846d4972b5502e4af4a967c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 17.329996
+      value: 16.44
       objectReference: {fileID: 0}
     - target: {fileID: 3544809056879113241, guid: b2d177d77846d4972b5502e4af4a967c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -624,6 +624,18 @@ PrefabInstance:
     - target: {fileID: 7282736328781787428, guid: b2d177d77846d4972b5502e4af4a967c, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 7390298476363258213, guid: b2d177d77846d4972b5502e4af4a967c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.291
+      objectReference: {fileID: 0}
+    - target: {fileID: 7390298476363258213, guid: b2d177d77846d4972b5502e4af4a967c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.007
+      objectReference: {fileID: 0}
+    - target: {fileID: 7390298476363258213, guid: b2d177d77846d4972b5502e4af4a967c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.412
       objectReference: {fileID: 0}
     - target: {fileID: 7678325025793994242, guid: b2d177d77846d4972b5502e4af4a967c, type: 3}
       propertyPath: m_ClearFlags
@@ -2586,7 +2598,7 @@ PlayableDirector:
   m_Enabled: 1
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: f9eb196e688504aaf87134f1b1cf5064, type: 2}
-  m_InitialState: 1
+  m_InitialState: 0
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
