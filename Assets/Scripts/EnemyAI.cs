@@ -34,7 +34,7 @@ public class Enemy : MonoBehaviour
     {
         if (GameManager.instance != null)
         {
-            GameManager.instance.enemyCount--;
+            GameManager.instance.OnEnemyDeath();
         }
     }
 

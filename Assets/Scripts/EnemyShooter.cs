@@ -49,10 +49,11 @@ public class EnemyShooter : MonoBehaviour
 
     void Shoot()
     {
+        Debug.Log("Shooting from location: " + firePoint.position);
         if (bulletPrefab != null && firePoint != null)
         {
             GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-            
+
             // Assign owner to prevent self-damage
             Bullet b = bullet.GetComponent<Bullet>();
             if (b != null)

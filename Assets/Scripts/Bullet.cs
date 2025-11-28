@@ -33,33 +33,22 @@ public class Bullet : MonoBehaviour
         }
 
         Debug.Log($"Bullet hit: {other.name}");
-        // Check if we hit a TargetDummy
-        TargetDummy dummy = other.GetComponent<TargetDummy>();
-        if (dummy != null)
-        {
-            dummy.TakeDamage(damage);
-            Destroy(gameObject); // Destroy bullet on impact
-            return;
-        }
-
         // Check if we hit an Enemy (EnemyAI)
         Enemy enemy = other.GetComponent<Enemy>();
         if (enemy != null)
         {
             enemy.TakeDamage(damage);
-            Destroy(gameObject);
             return;
         }
 
-        // Check if we hit the Player
+        // // Check if we hit the Player
         PlayerHealth player = other.GetComponent<PlayerHealth>();
         if (player != null)
         {
             player.TakeDamage(damage);
-            Destroy(gameObject);
             return;
         }
-        // Optional: Destroy bullet on hitting walls/environment (if they have a specific tag or layer)
-        // For now, let's just destroy on enemy hit or timeout
+
+        Destroy(gameObject);
     }
 }
