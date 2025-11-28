@@ -1,4 +1,0 @@
-repository "pew-pew/pew-pew@3573582360635@cloud"
-  path "/"
-    br "/main"
-    co "/main"
