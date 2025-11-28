@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     */
     public void StartSlowMotion(){
         Time.timeScale = 0.5f;
+        Time.fixedDeltaTime = 0.02F * Time.timeScale;
     }
 
     /**
@@ -35,6 +36,7 @@ public class GameManager : MonoBehaviour
     */
     public void StopSlowMotion(){
         Time.timeScale = 1f;
+        Time.fixedDeltaTime = 0.02F;
     }
 
     /**
