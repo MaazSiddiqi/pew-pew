@@ -20,6 +20,12 @@ public class Enemy : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player");
         agent = GetComponent<NavMeshAgent>();
+        GameManager.instance.enemyCount++;
+    }
+
+    void OnDestroy()
+    {
+        GameManager.instance.enemyCount--;
     }
 
     // Update is called once per frame

@@ -6,12 +6,18 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public int enemyCount = 0;
+
     void Awake(){
         instance = this;
     }
 
     void Update(){
         if(IsGameOver()){
+            EndGame();
+        }
+
+        if(enemyCount <= 0){
             EndGame();
         }
     }
