@@ -10,7 +10,17 @@ public class AmmoBox : Interactable
     {
         if (string.IsNullOrEmpty(promptMessage))
         {
-            promptMessage = "Press E to pick up Ammo";
+            string binding = "E";
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                InputManager inputManager = player.GetComponent<InputManager>();
+                if (inputManager != null)
+                {
+                    binding = inputManager.GetInteractBinding();
+                }
+            }
+            promptMessage = $"Press {binding} to pick up Ammo";
         }
     }
 

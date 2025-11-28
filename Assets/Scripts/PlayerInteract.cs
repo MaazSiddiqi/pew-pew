@@ -33,7 +33,7 @@ public class PlayerInteract : MonoBehaviour
         RaycastHit debugHit;
         if (Physics.Raycast(ray, out debugHit, distance))
         {
-             // Debug.Log($"Debug Ray hit: {debugHit.collider.name} on Layer: {LayerMask.LayerToName(debugHit.collider.gameObject.layer)}");
+             Debug.Log($"Debug Ray hit: {debugHit.collider.name} on Layer: {LayerMask.LayerToName(debugHit.collider.gameObject.layer)}");
         }
 
         RaycastHit hitInfo; 
