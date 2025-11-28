@@ -8,10 +8,14 @@ public class Enemy : MonoBehaviour
     public GameObject player;
 
     public float speed = 5f;
+    public float detectionRange = 10f; // Distance at which enemy will start targeting the player
     public float attackRange = 1.5f;
     public float attackCooldown = 1f;
 
     public float health = 100f;
+
+    [Header("Death Effect")]
+    public GameObject deathEffectPrefab; // CFXR Magic Poof prefab
 
     private NavMeshAgent agent;
 
@@ -20,12 +24,18 @@ public class Enemy : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player");
         agent = GetComponent<NavMeshAgent>();
-        GameManager.instance.enemyCount++;
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.enemyCount++;
+        }
     }
 
     void OnDestroy()
     {
-        GameManager.instance.enemyCount--;
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.enemyCount--;
+        }
     }
 
     // Update is called once per frame
@@ -35,10 +45,25 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        ChasePlayer();
+        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
 
-        if (Vector3.Distance(transform.position, player.transform.position) <= attackRange){
-            Attack();
+        // Only chase player if within detection range
+        if (distanceToPlayer <= detectionRange)
+        {
+            ChasePlayer();
+
+            // Attack if within attack range
+            if (distanceToPlayer <= attackRange){
+                Attack();
+            }
+        }
+        else
+        {
+            // Stop moving if player is out of range
+            if (agent != null && agent.isActiveAndEnabled)
+            {
+                agent.ResetPath();
+            }
         }
     }
 
@@ -55,7 +80,16 @@ public class Enemy : MonoBehaviour
     }
 
     public void Die(){
-        GameManager.instance.OnEnemyDeath();
+        // Spawn death effect if prefab is assigned
+        if (deathEffectPrefab != null)
+        {
+            Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
+        }
+
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.OnEnemyDeath();
+        }
         Destroy(gameObject);
     }
 

@@ -12,6 +12,17 @@ public class GameManager : MonoBehaviour
         instance = this;
     }
 
+    void Start(){
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     void Update(){
         if(IsGameOver()){
             EndGame();
