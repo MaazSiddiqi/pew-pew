@@ -43,7 +43,7 @@ public class PlayerUI : MonoBehaviour
     {
         // Set to fully visible (or desired max alpha)
         Color color = damageOverlay.color;
-        color.a = 0.8f; 
+        color.a = 0.5f; 
         damageOverlay.color = color;
 
         float fadeSpeed = 2f;
