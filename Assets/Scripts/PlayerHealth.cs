@@ -10,6 +10,8 @@ public class PlayerHealth : MonoBehaviour
     public TMPro.TextMeshProUGUI healthText;
     public AudioClip hurtSound;
     private AudioSource audioSource;
+    private PlayerUI playerUI;
+    private PlayerLook playerLook;
 
     // Start is called before the first frame update
     void Start()
@@ -17,6 +19,8 @@ public class PlayerHealth : MonoBehaviour
         currentHealth = maxHealth;
         UpdateHealthUI();
         audioSource = GetComponent<AudioSource>();
+        playerUI = GetComponent<PlayerUI>();
+        playerLook = GetComponent<PlayerLook>();
     }
 
     public void TakeDamage(float damage)
@@ -24,6 +28,16 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= damage;
         Debug.Log($"Player took {damage} damage. Current Health: {currentHealth}");
         UpdateHealthUI();
+
+        if (playerUI != null)
+        {
+            playerUI.ShowDamageOverlay();
+        }
+
+        if (playerLook != null)
+        {
+            playerLook.Shake(0.2f, 0.5f); // Duration 0.2s, Magnitude 0.5 degrees
+        }
 
         if (audioSource != null && hurtSound != null)
         {
