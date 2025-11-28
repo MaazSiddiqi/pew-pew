@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
 
     public int enemyCount = 0;
 
+    public float timeElapsed = 0f;
+
     void Awake(){
         instance = this;
     }
@@ -31,6 +33,8 @@ public class GameManager : MonoBehaviour
         if(enemyCount <= 0){
             EndGame();
         }
+
+        timeElapsed += Time.deltaTime;
     }
 
     /**
@@ -38,6 +42,7 @@ public class GameManager : MonoBehaviour
     */
     public void EndGame(){
         Debug.Log("Game Over");
+        Debug.Log($"Time Elapsed: {timeElapsed} seconds");
     }
 
     /**
