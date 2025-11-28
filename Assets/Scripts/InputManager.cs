@@ -55,6 +55,15 @@ public class InputManager : MonoBehaviour
         onFoot.Enable();
     }
 
+    public string GetInteractBinding()
+    {
+        if (playerInput != null)
+        {
+            return onFoot.Interact.GetBindingDisplayString(0);
+        }
+        return "E"; // Default fallback
+    }
+
     private void OnDisable(){
         onFoot.Disable();
     }
