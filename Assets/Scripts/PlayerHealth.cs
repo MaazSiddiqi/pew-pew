@@ -96,8 +96,10 @@ public class PlayerHealth : MonoBehaviour
     void Die()
     {
         Debug.Log("Player Died!");
-        // Handle player death (e.g., restart level, show game over screen)
-        // For now, just disable the player or pause
-        // gameObject.SetActive(false); 
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.isPlayerDead = true;
+            GameManager.instance.OnPlayerDeath();
+        }
     }
 }

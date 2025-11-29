@@ -9,6 +9,8 @@ public class PlayerUI : MonoBehaviour
     private TextMeshProUGUI promptText;
     [SerializeField]
     private UnityEngine.UI.Image damageOverlay;
+    [SerializeField]
+    private GameObject crosshair;
 
     // Start is called before the first frame update
     void Start()
@@ -16,6 +18,14 @@ public class PlayerUI : MonoBehaviour
         if (damageOverlay != null)
         {
             damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, 0f);
+        }
+    }
+
+    public void ToggleCrosshair(bool state)
+    {
+        if (crosshair != null)
+        {
+            crosshair.SetActive(state);
         }
     }
 

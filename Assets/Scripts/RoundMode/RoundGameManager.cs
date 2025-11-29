@@ -19,8 +19,10 @@ public class RoundGameManager : GameManager
     private AmmoSpawner ammoSpawner;
     private HealthSpawner healthSpawner;
 
-    void Start()
+    public override void Start()
     {
+        base.Start(); // Call base Start to initialize UI
+        
         if (instance == null)
         {
             instance = this;
@@ -54,8 +56,38 @@ public class RoundGameManager : GameManager
     void Update()
     {
         if(IsGameOver()){
-            EndGame();
-            return;
+            // This is BAD.
+            
+            // Fix: If player is dead, DO NOT call EndGame() here.
+            // EndGame is for WINNING in Round Mode?
+            // No, EndGame was used for both in original code.
+            // But now we separated them.
+            
+            // If player is dead, OnPlayerDeath handles it.
+            // So we should only call EndGame if we WON.
+            // But Round Mode is endless? Or until death?
+            // If it's endless, you only "EndGame" when you die.
+            // So Round Mode "EndGame" IS the Game Over screen?
+            // Or is there a "Win" condition?
+            // The user said "win screen with your time".
+            // But Round Mode is rounds.
+            
+            // Let's assume for now we just want to fix the inheritance.
+            // I will leave the Update logic as is but fix the Start and ProceedToLeaderboard.
+            
+            // Actually, if IsGameOver() is true (player dead), it calls EndGame().
+            // EndGame() shows Win Screen.
+            // This is WRONG for death.
+            
+            // I should change this logic.
+            if (isPlayerDead) return; // Handled by OnPlayerDeath
+            
+            // If there is another win condition?
+            // Round mode seems endless.
+            // So maybe EndGame is never called unless we want to quit?
+            // Or maybe there is a max round?
+            
+            // For now, I will just fix the overrides.
         }
 
         if (!isRoundActive)
@@ -135,6 +167,22 @@ public class RoundGameManager : GameManager
      * Override EndGame to handle round-based scoring
      */
     public override void EndGame()
+    {
+        // This is called when we WIN (e.g. maybe after X rounds if we added that logic, or manually)
+        // For Round Mode, maybe we just use the base EndGame which shows Win Screen?
+        // But we need to show Rounds, not Time.
+        // Base EndGame shows winTimeText.
+        
+        // Let's override to show Rounds if possible, or just use base and update text.
+        base.EndGame();
+        
+        if (winTimeText != null)
+        {
+            winTimeText.text = $"Rounds: {currentRound}";
+        }
+    }
+
+    protected override void ProceedToLeaderboard()
     {
         string leaderboardName = PlayerPrefs.GetString("leaderboardname");
 

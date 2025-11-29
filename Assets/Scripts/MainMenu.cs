@@ -15,6 +15,11 @@ public class MainMenu : MonoBehaviour
     void Start()
     {
         UpdateLeaderboards();
+        if (PlayerPrefs.GetInt("ShowLeaderboard", 0) == 1)
+        {
+            PlayerPrefs.SetInt("ShowLeaderboard", 0);
+            handleShowLeaderboard();
+        }
     }
 
     /**

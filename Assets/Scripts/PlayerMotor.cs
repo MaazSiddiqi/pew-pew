@@ -33,6 +33,15 @@ public class PlayerMotor : MonoBehaviour
             playerVelocity.y = -2f;
         }
         controller.Move(playerVelocity * Time.deltaTime);
+
+        // Check for fall
+        if (transform.position.y < -100f)
+        {
+            if (GameManager.instance != null)
+            {
+                GameManager.instance.GameOver();
+            }
+        }
     }
 
     public void Jump(){
