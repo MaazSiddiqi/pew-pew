@@ -48,8 +48,7 @@ public class MainMenu : MonoBehaviour
                         lines[i] = $"{i + 1}. {mainEntries[i].name} - {mainEntries[i].score:F2}s";
                     }
                     else
-                    {
-                        lines[i] = $"{i + 1}.";
+                    {                        lines[i] = $"{i + 1}.";
                     }
                 }
                 mainContentText.text = string.Join("\n", lines);
