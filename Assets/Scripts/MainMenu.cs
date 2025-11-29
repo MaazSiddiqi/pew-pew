@@ -165,7 +165,14 @@ public class MainMenu : MonoBehaviour
 
     public void handleStartGame()
     {
-        SceneManager.LoadScene("Game");
+        PlayerPrefs.SetString("GameMode", "Classic");
+        SceneManager.LoadScene(1);
+    }
+
+    public void handleStartArcadeGame()
+    {
+        PlayerPrefs.SetString("GameMode", "Arcade");
+        SceneManager.LoadScene(2);
     }
 
     public void handleShowLeaderboard()

@@ -126,6 +126,9 @@ public class RoundGameManager : GameManager
         StartCountdown();
     }
 
+    public override bool IsGameOver()
+    {
+        return isPlayerDead;
     /**
      * Override EndGame to handle round-based scoring
      */
