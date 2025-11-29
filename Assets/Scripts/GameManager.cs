@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
@@ -59,6 +60,21 @@ public class GameManager : MonoBehaviour
     */
     public void EndGame(){
         SceneManager.LoadScene("MainMenu");
+
+        string leaderboard = PlayerPrefs.GetString("leaderboard");
+        if (leaderboard == "")
+        {
+            leaderboard = timeElapsed.ToString("F2");
+        }
+        else
+        {
+            List<float> times = leaderboard.Split(',').Select(float.Parse).ToList();
+            times.Add(timeElapsed);
+            times.Sort();
+            leaderboard = string.Join(",", times.Take(3).Select(t => t.ToString("F2")));
+        }
+
+        PlayerPrefs.SetString("leaderboard", leaderboard);
     }
 
     /**
