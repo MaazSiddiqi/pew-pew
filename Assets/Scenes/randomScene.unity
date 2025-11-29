@@ -2826,7 +2826,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ebcf4ca146434dbc883c20bec74341d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeElapsedText: {fileID: 0}
+  promptText: {fileID: 0}
+  winZone: {fileID: 0}
   enemyCount: 0
+  isPlayerDead: 0
   timeElapsed: 0
   currentRound: 0
   roundCountdown: 10
@@ -14822,9 +14826,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1887035111346523119, guid: 7c36e3216f02b46319c3c1cb5a52283c, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 999.71
+      objectReference: {fileID: 0}
+    - target: {fileID: 1887035111346523119, guid: 7c36e3216f02b46319c3c1cb5a52283c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.00048398972
+      objectReference: {fileID: 0}
+    - target: {fileID: 2445897731694333417, guid: 7c36e3216f02b46319c3c1cb5a52283c, type: 3}
+      propertyPath: m_text
+      value: 'HP: 100'
+      objectReference: {fileID: 0}
+    - target: {fileID: 6309362047338652530, guid: 7c36e3216f02b46319c3c1cb5a52283c, type: 3}
+      propertyPath: m_text
+      value: interact
+      objectReference: {fileID: 0}
     - target: {fileID: 7446578834921334119, guid: 7c36e3216f02b46319c3c1cb5a52283c, type: 3}
       propertyPath: m_Name
       value: HUDCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 8657071123118430691, guid: 7c36e3216f02b46319c3c1cb5a52283c, type: 3}
+      propertyPath: m_text
+      value: 'Ammo: 0/0'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -22180,7 +22204,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: count down
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

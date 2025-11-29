@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviour
 
     public float timeElapsed = 0f;
 
+    public string gameMode = "Classic";
+    public bool areEnemiesSpawned = false;
+
     void Start(){
         if (instance == null)
         {
@@ -26,13 +29,19 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        if (PlayerPrefs.HasKey("GameMode"))
+        {
+            gameMode = PlayerPrefs.GetString("GameMode");
+        }
+        Debug.Log("Game Mode: " + gameMode);
     }
 
     void Update(){
         timeElapsed += Time.deltaTime;
         timeElapsedText.text = timeElapsed.ToString("F2");
 
-        if (enemyCount <= 0)
+        if (enemyCount <= 0 && areEnemiesSpawned)
         {
             winZone.SetActive(true);
             promptText.gameObject.SetActive(true);
@@ -45,6 +54,7 @@ public class GameManager : MonoBehaviour
 
     public virtual void OnEnemySpawned(){
         enemyCount++;
+        areEnemiesSpawned = true;
     }
 
     /**
@@ -89,8 +99,8 @@ public class GameManager : MonoBehaviour
      * Checks if the game is over
      * @return bool True if the game is over, false otherwise
      */
-    public bool IsGameOver(){
-        return enemyCount <= 0 || isPlayerDead;
+    public virtual bool IsGameOver(){
+        return (enemyCount <= 0 && areEnemiesSpawned) || isPlayerDead;
     }
 
     /**

@@ -123,4 +123,9 @@ public class RoundGameManager : GameManager
         Debug.Log($"Round {currentRound} Complete!");
         StartCountdown();
     }
+
+    public override bool IsGameOver()
+    {
+        return isPlayerDead;
+    }
 }
