@@ -43,16 +43,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public int enemyCount = 0;
-
-    public float timeElapsed = 0f;
-
     public virtual void OnEnemySpawned(){
         enemyCount++;
-    }
-
-    public virtual void OnEnemyDeath(){
-        enemyCount--;
     }
 
     /**
@@ -94,13 +86,21 @@ public class GameManager : MonoBehaviour
     }
 
     /**
-    * Called when the player dies
-    */
+     * Checks if the game is over
+     * @return bool True if the game is over, false otherwise
+     */
+    public bool IsGameOver(){
+        return enemyCount <= 0 || isPlayerDead;
+    }
+
+    /**
+     * Called when the player dies
+     */
     public void OnPlayerDeath(){
         EndGame();
     }
 
-    public void OnEnemyDeath(){
+    public virtual void OnEnemyDeath(){
         enemyCount--;
     }
 }
