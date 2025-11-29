@@ -227,7 +227,7 @@ Transform:
   m_GameObject: {fileID: 89407877}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.753, y: -0.065, z: 0.52}
+  m_LocalPosition: {x: -0.469, y: -0.059, z: 1.098}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -655,6 +655,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7282736328781787428, guid: b2d177d77846d4972b5502e4af4a967c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 245240495}
+    - targetCorrespondingSourceObject: {fileID: 7282736328781787428, guid: b2d177d77846d4972b5502e4af4a967c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 245240504}
     - targetCorrespondingSourceObject: {fileID: 1008022043751034315, guid: b2d177d77846d4972b5502e4af4a967c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1636699118}
@@ -715,6 +718,19 @@ MonoBehaviour:
   currentHealth: 0
   healthText: {fileID: 553389176}
   hurtSound: {fileID: 0}
+--- !u!114 &245240504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245240477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afbac62d5e86744c582e1589f0cc9ec7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slowMoDuration: 3
 --- !u!1001 &282135032
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -820,7 +836,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e25f5912b8b4a4b7fa678f5c2e494382, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeElapsedText: {fileID: 0}
+  timeElapsedText: {fileID: 1384246537}
   promptText: {fileID: 434361557}
   winZone: {fileID: 809109064}
   enemyCount: 0
