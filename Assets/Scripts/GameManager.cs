@@ -180,7 +180,7 @@ public class GameManager : MonoBehaviour
     /**
      * Game Over Logic
      */
-    public void GameOver()
+    public virtual void GameOver()
     {
         if (gameOverScreen != null)
         {

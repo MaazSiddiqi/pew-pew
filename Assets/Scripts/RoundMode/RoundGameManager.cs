@@ -51,43 +51,26 @@ public class RoundGameManager : GameManager
         }
 
         StartCountdown();
+
+        // Hide Classic Mode UI
+        if (timeElapsedText != null) timeElapsedText.gameObject.SetActive(false);
+        if (promptText != null) promptText.gameObject.SetActive(false);
+        if (winZone != null) winZone.SetActive(false);
     }
 
     void Update()
     {
+        // Check for Pause
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePause();
+        }
+
+        if (isPaused) return;
+
         if(IsGameOver()){
-            // This is BAD.
-            
-            // Fix: If player is dead, DO NOT call EndGame() here.
-            // EndGame is for WINNING in Round Mode?
-            // No, EndGame was used for both in original code.
-            // But now we separated them.
-            
-            // If player is dead, OnPlayerDeath handles it.
-            // So we should only call EndGame if we WON.
-            // But Round Mode is endless? Or until death?
-            // If it's endless, you only "EndGame" when you die.
-            // So Round Mode "EndGame" IS the Game Over screen?
-            // Or is there a "Win" condition?
-            // The user said "win screen with your time".
-            // But Round Mode is rounds.
-            
-            // Let's assume for now we just want to fix the inheritance.
-            // I will leave the Update logic as is but fix the Start and ProceedToLeaderboard.
-            
-            // Actually, if IsGameOver() is true (player dead), it calls EndGame().
-            // EndGame() shows Win Screen.
-            // This is WRONG for death.
-            
-            // I should change this logic.
-            if (isPlayerDead) return; // Handled by OnPlayerDeath
-            
-            // If there is another win condition?
-            // Round mode seems endless.
-            // So maybe EndGame is never called unless we want to quit?
-            // Or maybe there is a max round?
-            
-            // For now, I will just fix the overrides.
+            GameOver();
+            return;
         }
 
         if (!isRoundActive)
@@ -168,18 +151,20 @@ public class RoundGameManager : GameManager
      */
     public override void EndGame()
     {
-        // This is called when we WIN (e.g. maybe after X rounds if we added that logic, or manually)
-        // For Round Mode, maybe we just use the base EndGame which shows Win Screen?
-        // But we need to show Rounds, not Time.
-        // Base EndGame shows winTimeText.
-        
-        // Let's override to show Rounds if possible, or just use base and update text.
+        // Use base EndGame to show the Win Screen (which we use as End Screen for Round Mode)
         base.EndGame();
         
         if (winTimeText != null)
         {
-            winTimeText.text = $"Rounds: {currentRound}";
+            winTimeText.text = $"Rounds Survived: {currentRound}";
         }
+    }
+
+    public override void GameOver()
+    {
+        // In Round Mode, Game Over (Death/Fall) leads to the same "End Screen" as winning
+        // So we call EndGame() instead of the base GameOver()
+        EndGame();
     }
 
     protected override void ProceedToLeaderboard()
