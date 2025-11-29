@@ -15,7 +15,6 @@ public class Bullet : MonoBehaviour
     {
         // Destroy bullet after 5 seconds to keep hierarchy clean
         Destroy(gameObject, 5f);
-        Debug.Log($"Bullet spawned at: {transform.position}");
     }
 
     // Update is called once per frame
@@ -32,34 +31,23 @@ public class Bullet : MonoBehaviour
             return;
         }
 
-        Debug.Log($"Bullet hit: {other.name}");
-        // Check if we hit a TargetDummy
-        TargetDummy dummy = other.GetComponent<TargetDummy>();
-        if (dummy != null)
-        {
-            dummy.TakeDamage(damage);
-            Destroy(gameObject); // Destroy bullet on impact
-            return;
-        }
-
-        // Check if we hit an Enemy (EnemyAI)
         Enemy enemy = other.GetComponent<Enemy>();
         if (enemy != null)
         {
             enemy.TakeDamage(damage);
-            Destroy(gameObject);
+            Debug.Log($"Enemy {enemy.gameObject.name} took {damage} damage");
             return;
         }
 
-        // Check if we hit the Player
+        // // Check if we hit the Player
         PlayerHealth player = other.GetComponent<PlayerHealth>();
         if (player != null)
         {
             player.TakeDamage(damage);
-            Destroy(gameObject);
+            Debug.Log($"Player {player.gameObject.name} took {damage} damage");
             return;
         }
-        // Optional: Destroy bullet on hitting walls/environment (if they have a specific tag or layer)
-        // For now, let's just destroy on enemy hit or timeout
+
+        Destroy(gameObject);
     }
 }

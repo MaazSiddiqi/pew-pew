@@ -1,14 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    public TextMeshProUGUI timeElapsedText;
+    public TextMeshProUGUI promptText;
+    public GameObject winZone;
 
-    void Awake(){
-        instance = this;
-    }
+    public int enemyCount = 0;
+    public bool isPlayerDead = false;
+
+    public float timeElapsed = 0f;
 
     void Start(){
         if (instance == null)
@@ -22,15 +28,18 @@ public class GameManager : MonoBehaviour
     }
 
     void Update(){
-        if(IsGameOver()){
-            EndGame();
-        }
-
-        if(enemyCount <= 0){
-            EndGame();
-        }
-
         timeElapsed += Time.deltaTime;
+        timeElapsedText.text = timeElapsed.ToString("F2");
+
+        if (enemyCount <= 0)
+        {
+            winZone.SetActive(true);
+            promptText.gameObject.SetActive(true);
+            promptText.text = "Enemies cleared! Head over to the end zone to finish!";
+            promptText.color = Color.green;
+        } else {
+            winZone.SetActive(false);
+        }
     }
 
     public int enemyCount = 0;
@@ -49,8 +58,7 @@ public class GameManager : MonoBehaviour
     * Ends the game
     */
     public void EndGame(){
-        Debug.Log("Game Over");
-        Debug.Log($"Time Elapsed: {timeElapsed} seconds");
+        SceneManager.LoadScene("MainMenu");
     }
 
     /**
@@ -70,17 +78,13 @@ public class GameManager : MonoBehaviour
     }
 
     /**
-    * Checks if the game is over
-    * @return bool True if the game is over, false otherwise
-    */
-    public bool IsGameOver(){
-        return false;
-    }
-
-    /**
     * Called when the player dies
     */
     public void OnPlayerDeath(){
         EndGame();
+    }
+
+    public void OnEnemyDeath(){
+        enemyCount--;
     }
 }
