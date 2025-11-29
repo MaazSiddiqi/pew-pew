@@ -365,6 +365,8 @@ MonoBehaviour:
   bulletPrefab: {fileID: 5203499878853301564, guid: 2bd4c45afdf7d419a9160da5ef113225, type: 3}
   firePoint: {fileID: 7430563540602202730}
   ammoText: {fileID: 0}
+  shootSound: {fileID: 0}
+  reloadSound: {fileID: 0}
   clips: 3
   bulletsPerClip: 10
   bullets: 0
@@ -425,9 +427,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   speed: 5
+  detectionRange: 10
   attackRange: 1.5
   attackCooldown: 1
   health: 100
+  deathEffectPrefab: {fileID: 0}
 --- !u!136 &4955158760080487076
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -445,7 +449,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
   m_Height: 2
@@ -486,7 +490,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  detectionRange: 10
+  detectionRange: 15
   fireRate: 1
   bulletPrefab: {fileID: 5203499878853301564, guid: 2bd4c45afdf7d419a9160da5ef113225, type: 3}
   firePoint: {fileID: 7430563540602202730}

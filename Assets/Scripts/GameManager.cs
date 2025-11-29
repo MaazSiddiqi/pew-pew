@@ -42,6 +42,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public int enemyCount = 0;
+
+    public float timeElapsed = 0f;
+
+    public virtual void OnEnemySpawned(){
+        enemyCount++;
+    }
+
+    public virtual void OnEnemyDeath(){
+        enemyCount--;
+    }
+
     /**
     * Ends the game
     */

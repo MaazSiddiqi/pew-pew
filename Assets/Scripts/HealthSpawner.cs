@@ -7,75 +7,49 @@ public class HealthSpawner : MonoBehaviour
     public GameObject healthPrefab;
     public int minHealthPacks = 1;
     public int maxHealthPacks = 5;
-    public float minDistance = 2f;
+    
+    // Hardcoded size for internal logic
+    private Vector3 healthPackSize = new Vector3(0.5f, 0.5f, 0.5f);
 
-    private List<GameObject> activeHealthPacks = new List<GameObject>();
-    private GameObject[] floorObjects;
+    [Tooltip("If true, spawns health automatically on Start. Uncheck for Round Mode.")]
+    public bool spawnOnStart = true;
 
     // Start is called before the first frame update
     void Start()
     {
-        floorObjects = GameObject.FindGameObjectsWithTag("Floor");
-        if (floorObjects.Length == 0)
+        if (spawnOnStart)
         {
-            Debug.LogError("No objects with tag 'Floor' found! Please tag your floor objects.");
-        }
-        else
-        {
-            SpawnRandomHealth();
+            SpawnHealth(Random.Range(minHealthPacks, maxHealthPacks + 1));
         }
     }
 
-    void SpawnRandomHealth()
+    public void SpawnHealth(int count)
     {
-        int count = Random.Range(minHealthPacks, maxHealthPacks + 1);
-        Debug.Log($"Spawning {count} health packs.");
+        if (SpawnManager.Instance == null) return;
+
+        Debug.Log($"HealthSpawner: Spawning {count} health packs.");
 
         for (int i = 0; i < count; i++)
         {
-            SpawnHealth();
+            SpawnSingleHealth();
         }
     }
 
-    void SpawnHealth()
+    void SpawnSingleHealth()
     {
-        if (floorObjects.Length == 0 || healthPrefab == null) return;
-
-        // 1. Pick a random floor object
-        GameObject randomFloor = floorObjects[Random.Range(0, floorObjects.Length)];
-        Collider floorCol = randomFloor.GetComponent<Collider>();
-
-        if (floorCol == null) return;
-
-        // 2. Pick a random point within bounds
-        Vector3 randomPoint = GetRandomPointInBounds(floorCol.bounds);
-
-        // 3. Check distance to other packs
-        bool tooClose = false;
-        foreach (GameObject pack in activeHealthPacks)
+        if (healthPrefab == null)
         {
-            if (pack != null && Vector3.Distance(randomPoint, pack.transform.position) < minDistance)
-            {
-                tooClose = true;
-                break;
-            }
+            Debug.LogError("HealthSpawner: Health Prefab is not assigned!");
+            return;
         }
 
-        if (!tooClose)
+        if (SpawnManager.Instance.GetRandomPointOnFloor(healthPackSize, out Vector3 spawnPos, healthPackSize.y * 0.5f))
         {
-            // Spawn slightly above floor to avoid clipping
-            Vector3 spawnPos = randomPoint + Vector3.up * 0.5f;
-            GameObject newPack = Instantiate(healthPrefab, spawnPos, Quaternion.identity);
-            activeHealthPacks.Add(newPack);
+            Instantiate(healthPrefab, spawnPos, Quaternion.identity);
         }
-    }
-
-    Vector3 GetRandomPointInBounds(Bounds bounds)
-    {
-        return new Vector3(
-            Random.Range(bounds.min.x, bounds.max.x),
-            bounds.max.y, // Spawn on top surface
-            Random.Range(bounds.min.z, bounds.max.z)
-        );
+        else
+        {
+            Debug.LogWarning("HealthSpawner: Could not find valid spawn point.");
+        }
     }
 }

@@ -8,8 +8,8 @@ public class Enemy : MonoBehaviour
     public GameObject player;
 
     public float speed = 5f;
-    public float detectionRange = 10f; // Distance at which enemy will start targeting the player
-    public float attackRange = 1.5f;
+    public float walkingRange = 100f; // Distance at which enemy will start targeting the player
+    public float shootingRange = 10f;
     public float attackCooldown = 1f;
 
     public float health = 100f;
@@ -17,6 +17,7 @@ public class Enemy : MonoBehaviour
     [Header("Death Effect")]
     public GameObject deathEffectPrefab; // CFXR Magic Poof prefab
 
+    private bool isDead = false;
     [Header("Hit Effect")]
     public float bounceScale = 1.1f; // How much to scale up on hit
     public float bounceDuration = 0.15f; // How long the bounce effect lasts
@@ -34,6 +35,11 @@ public class Enemy : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player");
         agent = GetComponent<NavMeshAgent>();
+        if (agent != null)
+        {
+            agent.speed = speed;
+        }
+        
         originalScale = transform.localScale; // Store original scale
 
         // Get renderer and store original color (check both self and children)
@@ -51,13 +57,13 @@ public class Enemy : MonoBehaviour
 
         if (GameManager.instance != null)
         {
-            GameManager.instance.enemyCount++;
+            GameManager.instance.OnEnemySpawned();
         }
     }
 
     void OnDestroy()
     {
-        if (GameManager.instance != null)
+        if (GameManager.instance != null && !isDead)
         {
             GameManager.instance.OnEnemyDeath();
         }
@@ -72,20 +78,29 @@ public class Enemy : MonoBehaviour
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
 
-        // Only chase player if within detection range
-        if (distanceToPlayer <= detectionRange)
+        // Attack if within shooting range
+        if (distanceToPlayer <= shootingRange)
+        {
+            // Stop moving to shoot
+            if (agent != null && agent.isOnNavMesh)
+            {
+                agent.ResetPath();
+            }
+            
+            // Look at player
+            transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));
+            
+            Attack();
+        }
+        // Chase if outside shooting range but within walking range
+        else if (distanceToPlayer <= walkingRange)
         {
             ChasePlayer();
-
-            // Attack if within attack range
-            if (distanceToPlayer <= attackRange){
-                Attack();
-            }
         }
+        // Idle if too far
         else
         {
-            // Stop moving if player is out of range
-            if (agent != null && agent.isActiveAndEnabled)
+            if (agent != null && agent.isOnNavMesh)
             {
                 agent.ResetPath();
             }
@@ -169,6 +184,9 @@ public class Enemy : MonoBehaviour
     }
 
     public void Die(){
+        if (isDead) return;
+        isDead = true;
+
         // Spawn death effect if prefab is assigned
         if (deathEffectPrefab != null)
         {
@@ -183,7 +201,9 @@ public class Enemy : MonoBehaviour
     }
 
     public void ChasePlayer(){
-        agent.SetDestination(player.transform.position);
+        if(agent.isOnNavMesh){
+            agent.SetDestination(player.transform.position);
+        }
     }
 
     public void Attack(){
