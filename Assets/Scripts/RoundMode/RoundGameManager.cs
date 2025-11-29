@@ -129,6 +129,8 @@ public class RoundGameManager : GameManager
     public override bool IsGameOver()
     {
         return isPlayerDead;
+    }
+
     /**
      * Override EndGame to handle round-based scoring
      */
