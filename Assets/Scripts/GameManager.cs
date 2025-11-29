@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     public TextMeshProUGUI timeElapsedText;
+    public TextMeshProUGUI promptText;
     public GameObject winZone;
 
     public int enemyCount = 0;
@@ -33,6 +34,9 @@ public class GameManager : MonoBehaviour
         if (enemyCount <= 0)
         {
             winZone.SetActive(true);
+            promptText.gameObject.SetActive(true);
+            promptText.text = "Enemies cleared! Head over to the end zone to finish!";
+            promptText.color = Color.green;
         } else {
             winZone.SetActive(false);
         }

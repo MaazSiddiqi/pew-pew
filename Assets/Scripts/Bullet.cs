@@ -15,7 +15,6 @@ public class Bullet : MonoBehaviour
     {
         // Destroy bullet after 5 seconds to keep hierarchy clean
         Destroy(gameObject, 5f);
-        Debug.Log($"Bullet spawned at: {transform.position}");
     }
 
     // Update is called once per frame
@@ -32,12 +31,11 @@ public class Bullet : MonoBehaviour
             return;
         }
 
-        Debug.Log($"Bullet hit: {other.name}");
-        // Check if we hit an Enemy (EnemyAI)
         Enemy enemy = other.GetComponent<Enemy>();
         if (enemy != null)
         {
             enemy.TakeDamage(damage);
+            Debug.Log($"Enemy {enemy.gameObject.name} took {damage} damage");
             return;
         }
 
@@ -46,6 +44,7 @@ public class Bullet : MonoBehaviour
         if (player != null)
         {
             player.TakeDamage(damage);
+            Debug.Log($"Player {player.gameObject.name} took {damage} damage");
             return;
         }
 
