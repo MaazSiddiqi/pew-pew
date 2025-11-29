@@ -6,10 +6,6 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    public int enemyCount = 0;
-
-    public float timeElapsed = 0f;
-
     void Awake(){
         instance = this;
     }
@@ -35,6 +31,18 @@ public class GameManager : MonoBehaviour
         }
 
         timeElapsed += Time.deltaTime;
+    }
+
+    public int enemyCount = 0;
+
+    public float timeElapsed = 0f;
+
+    public virtual void OnEnemySpawned(){
+        enemyCount++;
+    }
+
+    public virtual void OnEnemyDeath(){
+        enemyCount--;
     }
 
     /**
@@ -74,10 +82,5 @@ public class GameManager : MonoBehaviour
     */
     public void OnPlayerDeath(){
         EndGame();
-    }
-
-    public void OnEnemyDeath(){
-        // decrease the enemy count
-        // eventually call end game
     }
 }

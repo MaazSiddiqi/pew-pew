@@ -7,22 +7,19 @@ public class AmmoSpawner : MonoBehaviour
     public GameObject ammoPrefab;
     public int minAmmoBoxes = 3;
     public int maxAmmoBoxes = 10;
-    public float minDistance = 2f;
+    
+    // Hardcoded size for internal logic
+    private Vector3 ammoBoxSize = new Vector3(0.5f, 0.5f, 0.5f);
 
-    private List<GameObject> activeAmmoBoxes = new List<GameObject>();
-    private GameObject[] floorObjects;
+    [Tooltip("If true, spawns ammo automatically on Start. Uncheck for Round Mode.")]
+    public bool spawnOnStart = true;
 
     // Start is called before the first frame update
     void Start()
     {
-        floorObjects = GameObject.FindGameObjectsWithTag("Floor");
-        if (floorObjects.Length == 0)
+        if (spawnOnStart)
         {
-            Debug.LogError("No objects with tag 'Floor' found! Please tag your floor objects.");
-        }
-        else
-        {
-            SpawnRandomAmmo();
+            SpawnAmmo(Random.Range(minAmmoBoxes, maxAmmoBoxes + 1));
         }
     }
 
@@ -32,56 +29,34 @@ public class AmmoSpawner : MonoBehaviour
         // No respawning logic needed
     }
 
-    void SpawnRandomAmmo()
+    public void SpawnAmmo(int count)
     {
-        int count = Random.Range(minAmmoBoxes, maxAmmoBoxes + 1);
-        Debug.Log($"Spawning {count} ammo boxes.");
+        if (SpawnManager.Instance == null) return;
+
+        Debug.Log($"AmmoSpawner: Spawning {count} ammo boxes.");
 
         for (int i = 0; i < count; i++)
         {
-            SpawnAmmo();
+            SpawnSingleAmmo();
         }
     }
 
-    void SpawnAmmo()
+    void SpawnSingleAmmo()
     {
-        if (floorObjects.Length == 0 || ammoPrefab == null) return;
-
-        // 1. Pick a random floor object
-        GameObject randomFloor = floorObjects[Random.Range(0, floorObjects.Length)];
-        Collider floorCol = randomFloor.GetComponent<Collider>();
-
-        if (floorCol == null) return;
-
-        // 2. Pick a random point within bounds
-        Vector3 randomPoint = GetRandomPointInBounds(floorCol.bounds);
-
-        // 3. Check distance to other boxes
-        bool tooClose = false;
-        foreach (GameObject box in activeAmmoBoxes)
+        if (ammoPrefab == null)
         {
-            if (box != null && Vector3.Distance(randomPoint, box.transform.position) < minDistance)
-            {
-                tooClose = true;
-                break;
-            }
+            Debug.LogError("AmmoSpawner: Ammo Prefab is not assigned in the Inspector!");
+            return;
         }
 
-        if (!tooClose)
+        if (SpawnManager.Instance.GetRandomPointOnFloor(ammoBoxSize, out Vector3 spawnPos, ammoBoxSize.y * 0.5f))
         {
-            // Spawn slightly above floor to avoid clipping
-            Vector3 spawnPos = randomPoint + Vector3.up * 0.5f;
-            GameObject newBox = Instantiate(ammoPrefab, spawnPos, Quaternion.identity);
-            activeAmmoBoxes.Add(newBox);
+            Instantiate(ammoPrefab, spawnPos, Quaternion.identity);
+            Debug.Log($"AmmoSpawner: Spawned ammo at {spawnPos}");
         }
-    }
-
-    Vector3 GetRandomPointInBounds(Bounds bounds)
-    {
-        return new Vector3(
-            Random.Range(bounds.min.x, bounds.max.x),
-            bounds.max.y, // Spawn on top surface
-            Random.Range(bounds.min.z, bounds.max.z)
-        );
+        else
+        {
+            Debug.LogWarning("AmmoSpawner: Could not find valid spawn point.");
+        }
     }
 }

@@ -25,10 +25,6 @@ public class PlayerUI : MonoBehaviour
         {
             promptText.text = promptMessage;
         }
-        else
-        {
-            Debug.LogError("Prompt Text is NULL in PlayerUI!");
-        }
     }
 
     public void ShowDamageOverlay()
