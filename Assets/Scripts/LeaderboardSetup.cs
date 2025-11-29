@@ -1,77 +1,108 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using TMPro;
 using UnityEngine.SceneManagement;
+using TMPro;
+using System.Linq;
 
-public class GameManager : MonoBehaviour
+public class LeaderboardSetup : MonoBehaviour
 {
-    public static GameManager instance;
-    public TextMeshProUGUI timeElapsedText;
-    public TextMeshProUGUI promptText;
-    public GameObject winZone;
+    [Header("UI References")]
+    public TMP_InputField nameInputField;
+    public TextMeshProUGUI scoreDisplayText;
+    public UnityEngine.UI.Button submitButton;
+    public UnityEngine.UI.Button backButton;
 
-    public int enemyCount = 0;
-    public bool isPlayerDead = false;
+    private string scoreType;
+    private string scoreValue;
 
-    public float timeElapsed = 0f;
+    void Start()
+    {
+        // Get the stored score
+        string lastScore = PlayerPrefs.GetString("last_score");
 
-    void Start(){
-        if (instance == null)
+        if (string.IsNullOrEmpty(lastScore))
         {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    void Update(){
-        timeElapsed += Time.deltaTime;
-        timeElapsedText.text = timeElapsed.ToString("F2");
-
-        if (enemyCount <= 0)
-        {
-            winZone.SetActive(true);
-            promptText.gameObject.SetActive(true);
-            promptText.text = "Enemies cleared! Head over to the end zone to finish!";
-            promptText.color = Color.green;
-        } else {
-            winZone.SetActive(false);
-        }
-    }
-
-    public virtual void OnEnemySpawned(){
-        enemyCount++;
-    }
-
-    /**
-    * Ends the game
-    */
-    public virtual void EndGame(){
-        string leaderboardName = PlayerPrefs.GetString("leaderboardname");
-
-        if (leaderboardName == "")
-        {
-            // No name registered, store score temporarily and go to setup scene
-            PlayerPrefs.SetString("last_score", $"time:{timeElapsed:F2}");
-            SceneManager.LoadScene("LeaderboardSetup");
+            // No score found, go back to main menu
+            SceneManager.LoadScene("MainMenu");
             return;
         }
 
-        // Name exists, update leaderboard and go to main menu
-        UpdateLeaderboard(leaderboardName, timeElapsed);
+        // Parse the score
+        string[] parts = lastScore.Split(':');
+        if (parts.Length >= 2)
+        {
+            scoreType = parts[0];
+            scoreValue = parts[1];
+
+            // Display appropriate message
+            if (scoreType == "time")
+            {
+                if (float.TryParse(scoreValue, out float time))
+                {
+                    scoreDisplayText.text = $"Your time: {time:F2} seconds";
+                }
+            }
+            else if (scoreType == "rounds")
+            {
+                if (int.TryParse(scoreValue, out int rounds))
+                {
+                    scoreDisplayText.text = $"Rounds completed: {rounds}";
+                }
+            }
+        }
+
+        // Set up button listeners
+        if (submitButton != null)
+        {
+            submitButton.onClick.AddListener(OnSubmitName);
+        }
+
+        if (backButton != null)
+        {
+            backButton.onClick.AddListener(OnBackToMain);
+        }
+
+        // Set up input field submit listener
+        if (nameInputField != null)
+        {
+            nameInputField.onSubmit.AddListener((string value) => OnSubmitName());
+        }
+    }
+
+    public void OnSubmitName()
+    {
+        string playerName = nameInputField != null ? nameInputField.text : "";
+
+        if (string.IsNullOrWhiteSpace(playerName))
+        {
+            // Name is empty, don't proceed
+            return;
+        }
+
+        // Register the name
+        PlayerPrefs.SetString("leaderboardname", playerName);
+
+        // Update leaderboard
+        UpdateLeaderboard(playerName);
+
+        // Clear temporary score
+        PlayerPrefs.DeleteKey("last_score");
+
+        // Go to main menu
         SceneManager.LoadScene("MainMenu");
     }
 
-    /**
-     * Updates the leaderboard with a new entry
-     * @param playerName The player's name
-     * @param score The score value (time for main mode)
-     */
-    protected void UpdateLeaderboard(string playerName, float score)
+    public void OnBackToMain()
+    {
+        // Clear temporary score without updating leaderboard
+        PlayerPrefs.DeleteKey("last_score");
+
+        // Go to main menu
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    private void UpdateLeaderboard(string playerName)
     {
         string leaderboard = PlayerPrefs.GetString("leaderboard");
         List<LeaderboardEntry> allEntries = ParseLeaderboardEntries(leaderboard);
@@ -80,11 +111,22 @@ public class GameManager : MonoBehaviour
         List<LeaderboardEntry> timeEntries = allEntries.Where(e => !e.isRounds).ToList();
         List<LeaderboardEntry> roundsEntries = allEntries.Where(e => e.isRounds).ToList();
 
-        // Add new time entry
-        timeEntries.Add(new LeaderboardEntry { name = playerName, score = score, isRounds = false });
-
-        // Sort time entries (lower is better)
-        timeEntries = timeEntries.OrderBy(e => e.score).Take(3).ToList();
+        if (scoreType == "time")
+        {
+            if (float.TryParse(scoreValue, out float time))
+            {
+                timeEntries.Add(new LeaderboardEntry { name = playerName, score = time, isRounds = false });
+                timeEntries = timeEntries.OrderBy(e => e.score).Take(3).ToList(); // Lower is better for time
+            }
+        }
+        else if (scoreType == "rounds")
+        {
+            if (int.TryParse(scoreValue, out int rounds))
+            {
+                roundsEntries.Add(new LeaderboardEntry { name = playerName, score = rounds, isRounds = true });
+                roundsEntries = roundsEntries.OrderByDescending(e => e.score).Take(3).ToList(); // Higher is better for rounds
+            }
+        }
 
         // Combine both types back together
         List<string> formattedEntries = new List<string>();
@@ -103,7 +145,7 @@ public class GameManager : MonoBehaviour
     /**
      * Parses leaderboard entries, handling both old format (just numbers) and new format (name:score)
      */
-    protected List<LeaderboardEntry> ParseLeaderboardEntries(string leaderboard)
+    private List<LeaderboardEntry> ParseLeaderboardEntries(string leaderboard)
     {
         List<LeaderboardEntry> entries = new List<LeaderboardEntry>();
 
@@ -172,45 +214,11 @@ public class GameManager : MonoBehaviour
     /**
      * Helper class for leaderboard entries
      */
-    protected class LeaderboardEntry
+    private class LeaderboardEntry
     {
         public string name;
         public float score;
         public bool isRounds;
     }
-
-    /**
-    * Starts the slow motion
-    */
-    public void StartSlowMotion(){
-        Time.timeScale = 0.5f;
-        Time.fixedDeltaTime = 0.02F * Time.timeScale;
-    }
-
-    /**
-    * Stops the slow motion
-    */
-    public void StopSlowMotion(){
-        Time.timeScale = 1f;
-        Time.fixedDeltaTime = 0.02F;
-    }
-
-    /**
-     * Checks if the game is over
-     * @return bool True if the game is over, false otherwise
-     */
-    public bool IsGameOver(){
-        return enemyCount <= 0 || isPlayerDead;
-    }
-
-    /**
-     * Called when the player dies
-     */
-    public void OnPlayerDeath(){
-        EndGame();
-    }
-
-    public virtual void OnEnemyDeath(){
-        enemyCount--;
-    }
 }
+

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RoundGameManager : GameManager
 {
@@ -66,7 +68,7 @@ public class RoundGameManager : GameManager
                 StartRound();
             }
         }
-        
+
         timeElapsed += Time.deltaTime;
     }
 
@@ -81,7 +83,7 @@ public class RoundGameManager : GameManager
     {
         currentRound++;
         isRoundActive = true;
-        
+
         // Update UI
         if (roundPlayerUI != null)
         {
@@ -122,5 +124,59 @@ public class RoundGameManager : GameManager
     {
         Debug.Log($"Round {currentRound} Complete!");
         StartCountdown();
+    }
+
+    /**
+     * Override EndGame to handle round-based scoring
+     */
+    public override void EndGame()
+    {
+        string leaderboardName = PlayerPrefs.GetString("leaderboardname");
+
+        if (leaderboardName == "")
+        {
+            // No name registered, store score temporarily and go to setup scene
+            PlayerPrefs.SetString("last_score", $"rounds:{currentRound}");
+            SceneManager.LoadScene("LeaderboardSetup");
+            return;
+        }
+
+        // Name exists, update leaderboard and go to main menu
+        UpdateRoundLeaderboard(leaderboardName, currentRound);
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    /**
+     * Updates the round-based leaderboard with a new entry
+     * @param playerName The player's name
+     * @param rounds The number of rounds completed
+     */
+    private void UpdateRoundLeaderboard(string playerName, int rounds)
+    {
+        string leaderboard = PlayerPrefs.GetString("leaderboard");
+        List<LeaderboardEntry> allEntries = ParseLeaderboardEntries(leaderboard);
+
+        // Separate by type
+        List<LeaderboardEntry> timeEntries = allEntries.Where(e => !e.isRounds).ToList();
+        List<LeaderboardEntry> roundsEntries = allEntries.Where(e => e.isRounds).ToList();
+
+        // Add new rounds entry
+        roundsEntries.Add(new LeaderboardEntry { name = playerName, score = rounds, isRounds = true });
+
+        // Sort rounds entries (higher is better)
+        roundsEntries = roundsEntries.OrderByDescending(e => e.score).Take(3).ToList();
+
+        // Combine both types back together
+        List<string> formattedEntries = new List<string>();
+
+        // Format time entries as "name:score"
+        formattedEntries.AddRange(timeEntries.Select(e => $"{e.name}:{e.score:F2}"));
+
+        // Format rounds entries as "name:rounds:X"
+        formattedEntries.AddRange(roundsEntries.Select(e => $"{e.name}:rounds:{(int)e.score}"));
+
+        leaderboard = string.Join(",", formattedEntries);
+
+        PlayerPrefs.SetString("leaderboard", leaderboard);
     }
 }
